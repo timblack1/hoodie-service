@@ -1,0 +1,29 @@
+{
+  "name": "hoodie-service",
+  "version": "1.0.0",
+  "description": "A Polymer element providing access to Hoodie.",
+  "main": "hoodie-service.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "wct"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timblack1/hoodie-service.git"
+  },
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "hoodie",
+    "service"
+  ],
+  "author": "Tim Black <tim@alwaysreformed.com> (http://alwaysreformed.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timblack1/hoodie-service/issues"
+  },
+  "homepage": "https://github.com/timblack1/hoodie-service#readme"
+}
