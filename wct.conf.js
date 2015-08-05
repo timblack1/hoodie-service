@@ -12,7 +12,7 @@ module.exports = {
   suites: ['test'],
   plugins: {
     local: {
-        browsers: ['chrome', 'firefox']
+        browsers: ['firefox']
     }
   }
 };
