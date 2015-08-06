@@ -1,7 +1,6 @@
 {
   "name": "hoodie-service",
   "description": "A Polymer element providing access to Hoodie.",
-  "version": "0.0.1",
   "directories": {
     "test": "test"
   },
