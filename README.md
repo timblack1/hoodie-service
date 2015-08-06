@@ -1,5 +1,5 @@
-| [![Build Status](https://travis-ci.org/timblack1/hoodie-service.svg?branch=master)](https://travis-ci.org/timblack1/hoodie-service) | [![Coverage Status](https://coveralls.io/repos/timblack1/hoodie-service/badge.svg?branch=master&service=github)](https://coveralls.io/github/timblack1/hoodie-service?branch=master) | [![Dependency Status](https://david-dm.org/timblack1/hoodie-service.svg)](https://david-dm.org/timblack1/hoodie-service) | [![devDependency Status](https://david-dm.org/timblack1/hoodie-service/dev-status.svg)](https://david-dm.org/timblack1/hoodie-service/#info=devDependencies) |
-| --- | --- | --- | --- |
+| [![Build Status](https://travis-ci.org/timblack1/hoodie-service.svg?branch=master)](https://travis-ci.org/timblack1/hoodie-service) | [![Dependency Status](https://david-dm.org/timblack1/hoodie-service.svg)](https://david-dm.org/timblack1/hoodie-service) | [![devDependency Status](https://david-dm.org/timblack1/hoodie-service/dev-status.svg)](https://david-dm.org/timblack1/hoodie-service/#info=devDependencies) |
+| --- | --- | --- |
 
 # hoodie-service
 
