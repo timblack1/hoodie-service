@@ -5,8 +5,9 @@
     "test": "test"
   },
   "scripts": {
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post && gp.sh timblack1 hoodie-service",
     "test": "wct",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post && gp.sh timblack1 hoodie-service"
+    "update-github": "yo polymer:gh"
   },
   "repository": {
     "type": "git",
