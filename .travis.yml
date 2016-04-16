@@ -23,7 +23,7 @@ addons:
 #      - google-chrome
       - ubuntu-toolchain-r-test
     packages:
- #     - google-chrome-stable
+#      - google-chrome-stable
       - g++-4.8
   sauce_connect: true
 script:
