@@ -1,3 +1,13 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
 <link rel="import" href="../polymer/polymer.html">
 <script src="/hoodie/client.js"></script>
 
@@ -10,40 +20,38 @@ Example:
 
     <hoodie-service id="hoodie_service" hoodie={{hoodie}}></hoodie-service>
 
-@demo
+@demo demo/index.html
 -->
 <dom-module id="hoodie-service">
 
-  <style>
-    :host {
-      display: none;
-    }
-  </style>
-
-  <template></template>
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
   <script>
     'use strict';
-    (function () {
 
-      Polymer({
-        is: 'hoodie-service',
-        properties: {
-          // Permits you to access hoodie's API via `document.querySelector('hoodie-service').hoodie`.
-          hoodie: {
-            type: Object,
-            value: function(){
-              var hoodie = new Hoodie();
-              return hoodie;
-            },
-            reflectToAttribute: true,
-            readOnly: true,
-            notify: true
-          }
-        },
-        ready:function(){
+    Polymer({
+      is: 'hoodie-service',
+      properties: {
+        // Permits you to access hoodie's API via `document.querySelector('hoodie-service').hoodie`.
+        hoodie: {
+          type: Object,
+          value: function(){
+            var hoodie = new Hoodie();
+            return hoodie;
+          },
+          reflectToAttribute: true,
+          readOnly: true,
+          notify: true
         }
-      });
+      },
+      ready:function(){
+      }
+    });
 
-    })();
   </script>
 </dom-module>
