@@ -1,0 +1,29 @@
+{
+  "name": "hoodie-service",
+  "version": "0.0.2",
+  "authors": [
+    "Tim Black <tim@alwaysreformed.com>"
+  ],
+  "description": "A Polymer element providing access to Hoodie.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "hoodie",
+    "service"
+  ],
+  "main": "hoodie-service.html",
+  "license": "MIT",
+  "homepage": "https://github.com/timblack1/hoodie-service/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  }
+}
