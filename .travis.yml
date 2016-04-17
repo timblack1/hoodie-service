@@ -26,6 +26,5 @@ addons:
       - g++-4.8
 script:
   - xvfb-run wct
-  - "if [ \"${TRAVIS_PULL_REQUEST}\" = \"false\" ]; then wct -s 'default'; fi"
 after_success:
   - npm run semantic-release
