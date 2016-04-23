@@ -9,10 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<script>
-  // Avoid causing polylint to error out in Travis-CI
-  document.writeln('<script src="/hoodie/client.js">' + '</' + 'script>');
-</script>
 
 <!--
 A Polymer element providing access to Hoodie.
@@ -25,7 +21,7 @@ Example:
 
 @demo demo/index.html
 -->
-<dom-module id="hoodie-service">
+<dom-module id="hoodie-service" mode="{{mode}}">
 
   <template>
     <style>
@@ -44,19 +40,261 @@ Example:
         // Permits you to access hoodie's API via `document.querySelector('hoodie-service').hoodie`.
         hoodie: {
           type: Object,
-          value: function(){
-            var hoodie = new Hoodie();
-            return hoodie;
-          },
+          value: {},
           reflectToAttribute: true,
-          readOnly: true,
+          notify: true
+        },
+        // Set to 'test' from calling element when testing elements
+        // which require a stub Hoodie object.
+        mode: {
+          type: String,
+          value: 'normal',
           notify: true
         }
       },
 
       ready:function(){
-      }
+        
+        if (this.mode === 'normal'){
 
+          // Avoid causing polylint to error out in Travis-CI
+          var s = document.createElement('script');
+          s.setAttribute('src', '/hoodie/client.js');
+          document.head.appendChild(s);
+
+          this.hoodie = new Hoodie();
+
+        }else if (this.mode === 'test'){
+
+          // We stub Hoodie for tests here because it's easier than
+          // doing it in the tests.
+          this.hoodie = this.stub_hoodie();
+
+        }
+        
+      },
+      
+      /* Stub Hoodie
+       */
+      stub_hoodie: function() {
+
+        function addEventListener(name, handler) {
+          if (!this.events) this.events = {};
+          if (!this.events[name]) this.events[name] = [];
+          this.events[name].push(handler);
+        }
+
+        function removeEventListener(name, handler) {
+          if (!this.events) return;
+          if (!this.events[name]) return;
+          for (var i = this.events[name].length - 1; i >= 0; i--)
+            if (this.events[name][i] == handler)
+              this.events[name].splice(i, 1);
+        }
+
+        function dispatchEvent (name, args) {
+          if (!this.events) return;
+          if (!this.events[name]) return;
+          for (var i = 0; i < this.events[name].length; i++)
+            this.events[name][i].apply(this, args);
+        }
+
+        /* Returns a Promise which also has the jQuery deferred-like .done() and .fail()
+         * methods which Hoodie's methods return.
+         *
+         * Returns a Promise.
+         *
+         * Arguments:
+         *   ob: the Hoodie method which is being called.  Provided so we can call
+         *      ob.dispatchEvent(name) here.
+         *   name: string name of Hoodie function under test
+         *   done_str: string to pass to the done() function
+         *   mode: either 'done' or 'failed', indicates which mode the Hoodie method
+         *      under test should return for this test
+         */
+        var $Promise = function(ob, name, done_str, mode){
+
+//           // Call superclass constructor
+//           Promise.constructor.call(this);
+
+          // TODO: We might need to make this more perfectly imitate Hoodie's error
+          //  messages if we are testing for those error messages.  If we do that,
+          //  in the if...else blocks below, we should test for the 'failed' conditions
+          //  first, and make the last else be the 'done' condition.
+          var error = {
+            status: mode, 
+            name: name + ' failed', 
+            message: name + ' failed'
+          }
+          var out1 = Promise.resolve();
+          out1.done = function done(done_callback) {
+            var out2 = {};
+            if (mode === 'done'){
+              out2 = Promise.resolve(done_callback(done_str));
+            } else if (mode === 'failed') {
+              out2 = Promise.reject(error);
+            }
+            out2.fail = function(fail_callback){
+              if (mode === 'failed'){
+                fail_callback(error);
+              }
+            };
+            return out2;
+          };
+          ob.dispatchEvent(name);
+          return out1;
+        };
+
+        // The stubbed Hoodie object
+        // Note:  For now we don't need to use sinon.stub()
+        hoodie = {
+          account: {
+            users: [],
+            authenticate: function() {
+              var mode;
+              if (typeof this.username !== 'undefined' && this.username !== ''){
+                mode = 'done';
+              } else {
+                mode = 'failed';
+              }
+              return $Promise(this, 'authenticate', this.username, mode);
+            },
+            signUp: function(username, password) {
+              var mode;
+              if (
+                username === '' ||
+                typeof this.username !== 'undefined' ||
+                this.users.indexOf(username) !== -1
+              ){
+                mode = 'failed';
+              } else {
+                this.username = username;
+                this.users.push(username);
+                localStorage.setItem('_hoodie_config', {'hoodie_id': '123456'});
+                mode = 'done';
+              }
+              return $Promise(this, 'signup', username, mode);
+            },
+            signIn: function(username, password) {
+              var mode;
+              if (this.users.indexOf(username) !== -1){
+                this.username = username;
+                mode = 'done';
+              } else {
+                mode = 'failed';
+              }
+              return $Promise(this, 'signin', username, mode);
+            },
+            signOut: function() {
+              var mode;
+              if (typeof this.username !== 'undefined'){
+                this.users.splice(this.users.indexOf(this.username), 1);
+                delete this.username;
+              }
+              return $Promise(this, 'signout', null, 'done');
+            },
+            changePassword: function(currentPassword, newPassword){
+              var mode;
+              if (typeof this.username !== 'undefined' && this.username === username) {
+                mode = 'done';
+              } else {
+                mode = 'failed';
+              }
+              return $Promise(this, 'changepassword', null, mode);
+            },
+            changeUsername: function(currentPassword, newUsername){
+              var mode;
+              if (
+                // Not signed in
+                typeof this.username === 'undefined' ||
+                // Usernames identical
+                newUsername === this.username ||
+                // <newUsername> is taken
+                this.users.indexOf(newUsername) !== -1
+              ) {
+                mode = 'failed';
+              } else {
+                this.users[this.users.indexOf(this.username)] = newUsername;
+                this.username = newUsername;
+                mode = 'done';
+              }
+              return $Promise(this, 'changeusername', null, mode);
+            },
+            resetPassword: function(username){
+              var mode;
+              if (
+                // User <username> could not be found
+                this.users.indexOf(username) === -1
+              ){
+                mode = 'failed';
+              } else {
+                mode = 'done';
+              }
+              return $Promise(this, 'passwordreset', username, mode);
+            },
+            destroy: function() {
+              var mode;
+              var has_user = this.users.indexOf(this.username);
+              if (has_user !== -1){
+                this.users.splice(has_user, 1);
+              }
+              delete this.username;
+              localStorage.setItem('_hoodie_config', '{}');
+              mode = 'done';
+              return $Promise(this, 'destroy', null, mode);
+            },
+            on: function(event, callback) {
+
+              // Handle creating event listeners here
+
+              // If multiple events are specified in the first argument,
+              // handle each one separately
+              if (event.indexOf(' ') !== -1){
+                var thiz = this;
+                event.split(' ').forEach(function(e) {
+                  thiz.on(e, callback);
+                });
+                return;
+              }
+
+              this.addEventListener(event, callback);
+
+            },
+
+          },
+
+          on: function(event, callback){
+
+            // Handle creating event listeners here
+
+            // If multiple events are specified in the first argument,
+            // handle each one separately
+            if (event.indexOf(' ') !== -1){
+              var thiz = this;
+              event.split(' ').forEach(function(e) {
+                thiz.on(e, callback);
+              });
+              return;
+            }
+
+            this.addEventListener(event, callback);
+            
+          }
+        };
+
+        // Add event functionality to hoodie.account
+        hoodie.account.addEventListener = addEventListener.bind(hoodie.account);
+        hoodie.account.removeEventListener = removeEventListener.bind(hoodie.account);
+        hoodie.account.dispatchEvent = dispatchEvent.bind(hoodie.account);
+        // Add event functionality to hoodie
+        hoodie.addEventListener = addEventListener.bind(hoodie);
+        hoodie.removeEventListener = removeEventListener.bind(hoodie);
+        hoodie.dispatchEvent = dispatchEvent.bind(hoodie);
+
+        return hoodie;
+
+      }
+    
     });
 
   </script>
