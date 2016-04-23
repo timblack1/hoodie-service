@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/timblack1/hoodie-service#readme",
   "devDependencies": {
-    "semantic-release": "^4.0.2",
+    "semantic-release": "^6.2.1",
     "web-component-tester": "^4.0.0"
   }
 }
