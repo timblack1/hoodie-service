@@ -19,6 +19,18 @@ Example:
 
     <hoodie-service id="hoodie_service" hoodie={{hoodie}}></hoodie-service>
 
+    ready: function() {
+
+        var thiz = this;
+
+        this.$.hoodie_service.addEventListener('hoodie-loaded', function hoodie_loaded(event) {
+          thiz.$.hoodie_service.removeEventListener(event.type, hoodie_loaded);
+
+          thiz.hoodie = thiz.$.hoodie_service.hoodie;
+          thiz.username = thiz.hoodie.account.username;
+        });
+    }
+
 @demo demo/index.html
 -->
 <dom-module id="hoodie-service" mode="{{mode}}">
@@ -53,30 +65,51 @@ Example:
         }
       },
 
+      listeners: {
+        'hoodie-loaded': '_hoodieLoaded'
+      },
+
       ready:function(){
+
+        var thiz = this;
         
         if (this.mode === 'normal'){
 
           // Avoid causing polylint to error out in Travis-CI
-          var s = document.createElement('script');
-          s.setAttribute('src', '/hoodie/client.js');
-          document.head.appendChild(s);
 
-          this.hoodie = new Hoodie();
+          var s = document.createElement('script');
+
+          s.onload = function() {
+            thiz.hoodie = new Hoodie();
+            thiz.fire('hoodie-loaded');
+          };
+
+          s.setAttribute('src', '/hoodie/client.js');
+          s.async = false;
+          this.appendChild(s);
 
         }else if (this.mode === 'test'){
 
           // We stub Hoodie for tests here because it's easier than
           // doing it in the tests.
-          this.hoodie = this.stub_hoodie();
+          this.hoodie = this.stubHoodie();
 
         }
         
       },
+
+      /**
+       * Fired when the external Hoodie script has loaded.
+       *
+       * @event hoodie-loaded
+       */
+      _hoodieLoaded: function(event){
+        // This is just a placeholder for now.
+      },
       
       /* Stub Hoodie
        */
-      stub_hoodie: function() {
+      stubHoodie: function() {
 
         function addEventListener(name, handler) {
           if (!this.events) this.events = {};
