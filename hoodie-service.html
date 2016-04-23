@@ -188,7 +188,6 @@ Example:
             signOut: function() {
               var mode;
               if (typeof this.username !== 'undefined'){
-                this.users.splice(this.users.indexOf(this.username), 1);
                 delete this.username;
               }
               return $Promise(this, 'signout', null, 'done');
