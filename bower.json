@@ -12,7 +12,7 @@
     "service"
   ],
   "main": "hoodie-service.html",
-  "license": "MIT",
+  "license": "BSD-3-Clause-Clear",
   "homepage": "https://github.com/timblack1/hoodie-service/",
   "ignore": [
     "/.*",

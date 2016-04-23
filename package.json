@@ -21,7 +21,7 @@
     "service"
   ],
   "author": "Tim Black <tim@alwaysreformed.com> (http://alwaysreformed.com/)",
-  "license": "MIT",
+  "license": "BSD-3-Clause-Clear",
   "bugs": {
     "url": "https://github.com/timblack1/hoodie-service/issues"
   },
