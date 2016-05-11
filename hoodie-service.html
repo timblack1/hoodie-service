@@ -183,15 +183,6 @@ Example:
         hoodie = {
           account: {
             users: [],
-            authenticate: function() {
-              var mode;
-              if (typeof this.username !== 'undefined' && this.username !== ''){
-                mode = 'done';
-              } else {
-                mode = 'failed';
-              }
-              return $Promise(this, 'authenticate', this.username, mode);
-            },
             // Note: This is a copy of this.authenticate above.
             isSignedIn: function() {
               var mode;
