@@ -21,14 +21,15 @@ Example:
 
     ready: function() {
 
-        var thiz = this;
+      var thiz = this;
 
-        this.$.hoodie_service.addEventListener('hoodie-loaded', function hoodie_loaded(event) {
-          thiz.$.hoodie_service.removeEventListener(event.type, hoodie_loaded);
+      this.$.hoodie_service.addEventListener('hoodie-loaded', function hoodie_loaded(event) {
+        thiz.$.hoodie_service.removeEventListener(event.type, hoodie_loaded);
 
-          thiz.hoodie = thiz.$.hoodie_service.hoodie;
-          thiz.username = thiz.hoodie.account.username;
-        });
+        thiz.hoodie = thiz.$.hoodie_service.hoodie;
+        thiz.username = thiz.hoodie.account.username;
+      });
+
     }
 
 @demo demo/index.html
@@ -93,6 +94,7 @@ Example:
           // We stub Hoodie for tests here because it's easier than
           // doing it in the tests.
           this.hoodie = this.stubHoodie();
+          this.fire('hoodie-loaded');
 
         }
         
@@ -103,7 +105,7 @@ Example:
        *
        * @event hoodie-loaded
        */
-      _hoodieLoaded: function(event){
+      _hoodieLoaded: function(event) {
         // This is just a placeholder for now.
       },
       
@@ -332,3 +334,4 @@ Example:
 
   </script>
 </dom-module>
+
